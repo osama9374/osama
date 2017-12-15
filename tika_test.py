@@ -19,6 +19,7 @@ directory = os.listdir(path)
 start = time.time()
 print(directory)
 count = 0;
+type_dict = dict()
 for fpath in directory:
 #parsing through file to extract metadata and content
 	file_path = path + fpath
@@ -27,6 +28,10 @@ for fpath in directory:
 #detecting file type
 	file_type = detector.from_file(file_path)
 	print(file_type)
+	if(file_type) in type_dict:
+                type_dict[file_type].append(directory[count])
+        else:
+                type_dict[file_type] = [directory[count]]
 	parsed['id'] = str(count)
 
 #converting output from python dict to xml
@@ -58,5 +63,5 @@ for r in result:
         id = r['id']
 print directory[int(r['id'])]
 print path+directory[int(r['id'])]
-        
+print type_dict        
 

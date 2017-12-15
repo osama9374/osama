@@ -7,12 +7,14 @@ import glob
 import os
 import pysolr
 
+
+
 solr = pysolr.Solr('http://localhost:8983/solr/', timeout=10)
 
 reload(sys)
 #so that we don't get unicode encode error
 sys.setdefaultencoding('utf-8')
-path = "C:\\Users\\HP\\Desktop\\test_folder\\"
+path = "C:\\Users\\HP\\Desktop\\test_data\\"
 directory = os.listdir(path)
 start = time.time()
 print(directory)
@@ -29,8 +31,10 @@ for fpath in directory:
 
 #converting output from python dict to xml
 	xml = dicttoxml(parsed)
-	
-	solr.add([{"id":str(count),"content":parsed['content']}])
+	dic = {'id':str(count),"content":parsed['content']}
+	#dic.update(parsed['metadata']
+	solr.add([{"id":str(count),"content":parsed['content'],"payloads":parsed['metadata']}])
+        #{"id":str(count),"content":parsed['content']}
 
 #formatting xml using xml.dom.minidom
 	dom = parseString(xml)
@@ -49,7 +53,10 @@ end = time.time()
 #print(parsed['metadata'].keys())
 t_time  = end - start
 print(t_time)
-result = solr.search("Oracle Ebs")
+result = solr.search("IBA")
 for r in result:
-        print r
+        id = r['id']
+print directory[int(r['id'])]
+print path+directory[int(r['id'])]
+        
 
